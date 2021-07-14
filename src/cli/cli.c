@@ -97,7 +97,8 @@ static int execute_buffer(void)
         {
             ptr++;
         }
-        if (*ptr)
+
+        if (*ptr && (cli_params.cnt < CLI_CMD_PARAMS_MAX))
         {
             *ptr = '\0';
             ptr++;
@@ -125,6 +126,11 @@ static int execute_buffer(void)
 
 int init_cli(void (*print)(const char *))
 {
+    if (!print)
+    {
+        return CLI_ERROR_INVALID_FUNCTION_POINTER;
+    }
+
     cli_entries.cnt = 0;
     print_cb = print;
 
@@ -139,7 +145,11 @@ int init_cli(void (*print)(const char *))
 
 int add_cli_cmd(const char *cmd_string, const char *help_string, int (*cmd_cb)(int, const char **))
 {
-    if (cli_entries.cnt < CLI_ENTRIES)
+    if (!cmd_cb)
+    {
+        return CLI_ERROR_INVALID_FUNCTION_POINTER;
+    }
+    else if (cli_entries.cnt < CLI_ENTRIES)
     {
         cli_entries.entries[cli_entries.cnt].cmd = cmd_string;
         cli_entries.entries[cli_entries.cnt].help = help_string;
@@ -149,7 +159,7 @@ int add_cli_cmd(const char *cmd_string, const char *help_string, int (*cmd_cb)(i
     }
     else
     {
-        return CLI_ERROR_CMD_REGISTER_ERROR;
+        return CLI_ERROR_CMD_REGISTER_FAILED;
     }
 }
 

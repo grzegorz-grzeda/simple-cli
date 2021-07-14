@@ -18,14 +18,16 @@
 #define CLI_HELP_CMD_HELP "Displays this help screen"
 
 #define CLI_OK (0)
-#define CLI_ERROR_CMD_REGISTER_ERROR (-100)
-#define CLI_ERROR_INVALID_CMD (-101)
+#define CLI_ERROR_INVALID_FUNCTION_POINTER (-100)
+#define CLI_ERROR_CMD_REGISTER_FAILED (-101)
 #define CLI_ERROR_BUFFER_OVERFLOW (-102)
+#define CLI_ERROR_INVALID_CMD (-103)
 
 /**
  * Initialize the CLI
  * @param[in] print Calback to string printer
  * @return CLI_OK if success
+ * @return CLI_ERROR_INVALID_FUNCTION_POINTER if the print function pointer is invalid
  * @return CLI_ERROR_CMD_REGISTER_ERROR if no space for help command (check CLI_CMD_ENTRIES_MAX value)
  */
 int init_cli(void (*print)(const char *));
@@ -37,6 +39,7 @@ int init_cli(void (*print)(const char *));
  * @param[in] cmd_cb callback to execute the command
  * @return value of the cmd_cb if parsed successfully
  * @return CLI_ERROR_INVALID_CMD if command not recognised
+ * @return CLI_ERROR_INVALID_FUNCTION_POINTER if the cmd_cb function pointer is invalid
  */
 int add_cli_cmd(const char *cmd_string, const char* help_string, int (*cmd_cb)(int, const char **));
 
