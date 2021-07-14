@@ -1,24 +1,28 @@
 #include <stdio.h>
 #include "cli.h"
 
-int func_a(int argc, char **argv)
+int func_a(int argc, const char **argv)
 {
-    printf("In func_a:\n");
+    printf("In A function:\n");
 
     for (int i = 0; i < argc; i++)
     {
-        printf(" [%d] = %s\n", i, argv[i]);
+        printf(" [%d] ==> %s\n", i, argv[i]);
     }
+
+    return 0;
 }
 
-int func_b(int argc, char **argv)
+int func_b(int argc, const char **argv)
 {
-    printf("In func_a:\n");
+    printf("In B function:\n");
 
     for (int i = 0; i < argc; i++)
     {
-        printf(" [%d] = %s\n", i, argv[i]);
+        printf(" [%d] --- %s\n", i, argv[i]);
     }
+
+    return 0;
 }
 
 void print(const char *text)
@@ -33,10 +37,17 @@ int main(void)
 
     init_cli(print);
     add_cli_cmd("fun-a", "First defined function", func_a);
-    add_cli_cmd("fun-b", "Second defined function", func_a);
+    add_cli_cmd("fun-b", "Second defined function", func_b);
 
-    while (parse_cli_char(getchar()) > 0)
-        ;
+    while(1){
+        char c = getchar();
+
+        if (c == '\n') {
+            return parse_cli();
+        } else {
+            put_cli_char(c);
+        }
+    }
 
     return 0;
 }
